@@ -1,0 +1,106 @@
+<html>
+<HEAD>
+ <TITLE>Random email generator</TITLE>
+    <HTA:APPLICATION ID="oHTA"
+     APPLICATIONNAME="get_rand_mail"
+     BORDER="thin"
+     BORDERSTYLE="normal"
+     CAPTION="yes"
+     ICON=""
+     MAXIMIZEBUTTON="yes"
+     MINIMIZEBUTTON="yes"
+     SHOWINTASKBAR="yes"
+     SINGLEINSTANCE="no"
+     SYSMENU="yes"
+     VERSION="1.0"
+     WINDOWSTATE="normal"/>
+
+  <SCRIPT>
+
+  /* This function also retrieves the value of the commandLine property,
+     which cannot be set as an attribute.  */
+   
+  function window.onload()
+  {
+     sTempStr = "applicationName  = " + oHTA.applicationName + "\n" + 
+                "border           = " + oHTA.border          + "\n" +
+                "borderStyle      = " + oHTA.borderStyle     + "\n" + 
+                "caption          = " + oHTA.caption         + "\n" +
+                "commandLine      = " + oHTA.commandLine     + "\n" +
+                "icon             = " + oHTA.icon            + "\n" +
+                "maximizeButton   = " + oHTA.maximizeButton  + "\n" +
+                "minimizeButton   = " + oHTA.minimizeButton  + "\n" + 
+                "showInTaskBar    = " + oHTA.showInTaskbar   + "\n" +
+                "singleInstance   = " + oHTA.singleInstance  + "\n" +  
+                "sysMenu          = " + oHTA.sysMenu         + "\n" + 
+                "version          = " + oHTA.version         + "\n" + 
+                "windowState      = " + oHTA.windowState     + "\n" ;
+		  
+     //oPre.innerText = sTempStr;		 
+        window.resizeTo(400,600);
+  }
+  </SCRIPT>
+
+
+<script language="javascript">
+function random_int(max,min) {
+    max = max ? max : 100;
+    min = min ? min : 0;
+    return Math.floor((max-min-1)*Math.random()+min);
+}
+function random_name(length) {
+    length = length ? length : random_int(12,10);
+    var source = "aaaabcdeeeefghiiiiijklmnooooopqrstuuuuvwxyz";//ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var s_len = source.length;
+    var result="";
+    for(var i=0;i<length;i++) {
+        result += source.substr(random_int(s_len-1,0),1);
+    }
+    return result;
+}
+
+function random_email(email) {
+	var name = random_name(12);
+	return name + "@" + email;
+}
+
+function confirm(text,title) {
+    var sh = WScript.CreateObject("WScript.Shell");
+    WScript.Echo(text);
+    var bt = sh.Popup(text,5,"Confirm ?",69);
+    if(bt == 4) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+var fso = new ActiveXObject("Scripting.FileSystemObject");
+var ts = fso.openTextFile(oHTA.applicationName + ".log",8,true);
+function writeFile(text)
+{  
+  ts.WriteLine(text);
+}
+
+function refresh() {
+    var elm_email = document.getElementById("email");
+    var elm_result = document.getElementById("result");
+    var name = random_email(elm_email.value || "163.com");
+    var elm_text = document.createElement("pre");
+    elm_text.innerHTML = name;
+    elm_result.appendChild(elm_text);
+    ts.WriteLine(name);
+}
+</script>
+
+</head>
+
+<body>
+
+
+<input type="text" value="163.com" name="email" id="email" >
+<button name="refrech" onclick="return refresh();" value="Refresh" >Refresh</button>
+<p id="result">
+</p>
+<PRE ID=oPre>  </PRE>
+</body>
